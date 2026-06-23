@@ -20,7 +20,11 @@ function usePost(id: number) {
   const deletePost = (id: number, onSuccess: () => void) => {
     apiFetch(`/api/v1/posts/${id}`, {
       method: "DELETE",
-    }).then(onSuccess);
+    })
+    .then(onSuccess)
+    .catch((error) => {
+      alert(`${error.resultCode} : ${error.msg}`);
+    });
   };
 
   return {
@@ -45,12 +49,16 @@ function usePostComments(postId: number) {
   const deleteComment = (commentId: number, onSuccess: (data: any) => void) => {
     apiFetch(`/api/v1/posts/${postId}/comments/${commentId}`, {
       method: "DELETE",
-    }).then((data) => {
+    })
+    .then((data) => {
       if (postComments == null) return;
 
       setPostComments(postComments.filter((c) => c.id != commentId));
 
       onSuccess(data);
+    })
+    .catch((error) => {
+      alert(`${error.resultCode} : ${error.msg}`);
     });
   };
 
@@ -60,12 +68,16 @@ function usePostComments(postId: number) {
       body: JSON.stringify({
         content,
       }),
-    }).then((data) => {
+    })
+    .then((data) => {
       if (postComments == null) return;
 
       setPostComments([...postComments, data.data]);
 
       onSuccess(data);
+    })
+    .catch((error) => {
+      alert(`${error.resultCode} : ${error.msg}`);
     });
   };
 
@@ -77,7 +89,8 @@ function usePostComments(postId: number) {
     apiFetch(`/api/v1/posts/${postId}/comments/${commentId}`, {
       method: "PUT",
       body: JSON.stringify({ content }),
-    }).then((data) => {
+    })
+    .then((data) => {
       if (postComments == null) return;
 
       setPostComments(
@@ -87,6 +100,9 @@ function usePostComments(postId: number) {
       );
 
       onSuccess(data);
+    })
+    .catch((error) => {
+      alert(`${error.resultCode} : ${error.msg}`);
     });
   };
 
